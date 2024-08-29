@@ -12,11 +12,15 @@ print(img.shape, pic_path)
 plt.imshow(img)
 plt.show()
 
-original_pt = np.float32([(906, 467), (2077, 514), (2057, 1915)])
-target_pt = np.float32([(0, 0), (2077, 514), (2057, 1915)])
+original_pt = np.float32([(891, 409), (833, 1931), (1957, 441), (1941, 1933)])
+target_pt = np.float32([(0, 0), (0, 2268), (2000, 0), (2000, 2268)])
 M = cv2.getPerspectiveTransform(original_pt, target_pt)
+
 
 img = cv2.warpPerspective(img, M, (img.shape[1], img.shape[0]))
 
+img = img[:, :2000]
+img = img
+print(img.shape)
 plt.imshow(img)
 plt.show()
