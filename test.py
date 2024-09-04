@@ -1,13 +1,67 @@
-import threading
-
-threads = []
-
-def longCalc(j):
-    for i in range(100000000 // (j+1)):
-        pass
-    print('done', j)
-    return None
-
-for i in range(5):
-    threads.append(threading.Thread(target=longCalc, args=(i,)))
-    threads[-1].start()
+import pygame
+ 
+# import sys library
+import sys
+ 
+# initializing pygame
+pygame.init()
+ 
+clock = pygame.time.Clock()
+ 
+# Set the window screen size
+display_screen = pygame.display.set_mode((500, 500))
+ 
+# add font style and size
+base_font = pygame.font.Font(None, 40)
+ 
+ 
+# stores text taken by keyboard
+user_text = ''
+ 
+# set left, top, width, height in 
+# Pygame.Rect()
+input_rect = pygame.Rect(200, 200, 140, 32)
+color_active = pygame.Color("lightskyblue")
+color_passive = pygame.Color("gray15")
+color = color_passive
+ 
+active = False
+ 
+while True:
+     
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+ 
+        # when mouse collides with the rectangle
+        # make active as true
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if input_rect.collidepoint(event.pos):
+                active = True
+ 
+        # if the key is physically pressed down
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                 
+                # stores text except last letter
+                user_text = user_text[0:-1]
+            else:
+                user_text += event.unicode
+                print(user_text)
+ 
+    display_screen.fill((0, 0, 0))
+ 
+    if active:
+        color = color_active
+    else:
+        color = color_passive
+ 
+    pygame.draw.rect(display_screen, color, input_rect)
+     
+    # render the text
+    text_surface = base_font.render(user_text, True, (255, 255, 255))
+    display_screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+    input_rect.w = max(100, text_surface.get_width() + 10)
+    pygame.display.flip()
+    clock.tick(60)
